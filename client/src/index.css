@@ -4,36 +4,22 @@
 
 @layer base {
   body {
-    @apply bg-[#0b0f19] text-slate-100 antialiased;
+    @apply bg-gray-50 text-gray-900 antialiased;
   }
 }
 
-/* Custom scrollbars */
+/* Minimal scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #F3F4F6;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 3px;
+  background: #D1D5DB;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
-}
-
-/* Glassmorphism helpers */
-.glass-panel {
-  background: rgba(17, 24, 39, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.glass-panel-accent {
-  background: rgba(30, 41, 59, 0.6);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  background: #9CA3AF;
 }

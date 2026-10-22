@@ -1,64 +1,55 @@
-# ☁️ CloudiCraft Studio — Cloudinary AI Media Suite & Developer Playground
+# CloudiCraft Studio: Cloudinary Media Suite and Developer Playground
 
-> **Built for the Cloudinary Creator Community**  
-> An interactive full-stack application showcasing advanced Cloudinary API transformations, smart AI gravity auto-cropping, dynamic branding overlays, video-to-GIF processing, real-time URL inspection, and multi-language SDK code generation.
+An interactive full-stack workbench for building, inspecting, comparing, and benchmarking Cloudinary media transformation pipelines.
 
----
+## Capabilities
 
-## 🌟 Highlights & Key Capabilities
+- **Server-Side Signed Uploads**: Direct streaming upload to Cloudinary with secure credential isolation (API key and secret kept server-side in environment variables).
+- **Subject and Face Auto-Cropping (g_auto)**: Social media presets (1:1, 9:16, 16:9, 4:5) powered by Cloudinary AI gravity.
+- **Visual Enhancements**: Auto color balancing (e_improve), sharpen, vignette, Gaussian blur, and contrast adjustments.
+- **Dynamic Branding Layers**: Text overlays (l_text) with font customization, gravity positioning, and adjustable opacity.
+- **Video Processing Pipeline**: Generate 4-second animated GIF previews (so_0,du_4,f_gif) and video poster thumbnails (so_auto,f_jpg).
+- **Bandwidth Impact Measurement**: Real-time calculation of byte savings using Cloudinary automatic format and quality delivery (f_auto, q_auto).
+- **Cloudinary URL Inspector**: Structural breakdown explaining every transformation segment in the delivery URL.
+- **Multi-Language SDK Generator**: Copyable integration snippets for Node.js SDK v2, Python SDK, React, and cURL.
+- **Cloud Media Library**: Browse, preview, inspect, and delete assets stored in the Cloudinary cloud.
 
-- **🚀 Server-Side Signed Uploads**: Direct streaming upload to Cloudinary with secure credential isolation (`CLOUDINARY_API_KEY` & `CLOUDINARY_API_SECRET` kept server-side in `.env`).
-- **🎯 Smart Subject & Face Auto-Cropping (`g_auto`)**: Social media presets (Instagram 1:1, TikTok/Reels 9:16, YouTube 16:9, Portrait 4:5) powered by Cloudinary's AI gravity engine.
-- **✨ AI Visual Enhancements & Filters**: Auto color-balancing (`e_improve`), ultra-sharpen, vignette, Gaussian blur, and futuristic dual-tint styling.
-- **🏷️ Dynamic Branding & Watermark Layers**: Dynamic text overlays (`l_text:`, font customization, gravity positioning, and adjustable opacity).
-- **🎬 Cloudinary Video Pipeline**: Generate 4-second animated GIF previews (`so_0,du_4,f_gif`) and smart video poster thumbnails (`so_auto,f_jpg`).
-- **⚡ Bandwidth & Speed Impact Calculator**: Real-time measurement of bytes saved and page load speed improvements using Cloudinary's automatic format and quality engine (`f_auto,q_auto`).
-- **🔍 Cloudinary URL Inspector**: Educational breakdown explaining every transformation segment in the delivery URL for developers.
-- **💻 Multi-Language SDK Generator**: Instant copyable snippets in **Node.js SDK v2**, **Python SDK**, **React (`@cloudinary/url-gen`)**, and **cURL**.
-- **🗂️ Cloud Media Library**: Browse, preview, inspect, and delete assets stored in the Cloudinary cloud.
-
----
-
-## 🏗️ Architecture
+## Architecture
 
 ```
-                       ┌───────────────────────────────────────────────┐
-                       │               CloudiCraft Studio               │
-                       └───────────────────────┬───────────────────────┘
-                                               │
-                       ┌───────────────────────┴───────────────────────┐
-                       │                                               │
+                       +-----------------------------------------------+
+                       |               CloudiCraft Studio               |
+                       +-----------------------+-----------------------+
+                                               |
+                       +-----------------------+-----------------------+
+                       |                                               |
              Frontend (Port 3000)                             Backend (Port 5001)
      React 18 + Vite + Tailwind CSS                   Node.js + Express + Multer
-     • Real-time Before/After Slider                  • Cloudinary SDK v2
-     • Transformation Inspector & Breakdown           • Authenticated Upload Stream
-     • Multi-SDK Code Generator                       • Usage & Media Management API
-                       │                                               │
-                       └───────────────────────┬───────────────────────┘
-                                               │
+     - Real-time comparison slider                    - Cloudinary SDK v2
+     - Transformation URL inspector                   - Authenticated upload stream
+     - Multi-SDK code generator                       - Usage and media API
+                       |                                               |
+                       +-----------------------+-----------------------+
+                                               |
                               Cloudinary Cloud Platform
                                 (Cloud: yq115gst)
-                                ├── Signed Uploads
-                                ├── Smart AI Gravity (g_auto)
-                                ├── Dynamic Layers & Overlays
-                                └── Global Fastly/Akamai CDN Delivery
+                                - Signed uploads
+                                - Smart AI gravity (g_auto)
+                                - Dynamic layers and overlays
+                                - Global CDN delivery
 ```
 
----
-
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Prerequisites
-- **Node.js** v18+ (tested on Node v20)
-- **Cloudinary Account** (credentials configured in `server/.env`)
+- Node.js v18 or later
+- Cloudinary Account (credentials configured in `server/.env`)
 
 ### 2. Installation
 Install all dependencies for both backend and frontend:
 ```bash
-# In the project root:
 npm run install:all
 ```
-*(Or navigate to `server` and `client` individually and run `npm install`)*
 
 ### 3. Environment Configuration
 Verify your `server/.env` contains your Cloudinary credentials:
@@ -74,52 +65,56 @@ CLOUDINARY_API_SECRET=
 Start the backend server:
 ```bash
 npm run server
-# Runs Express on http://localhost:5001
 ```
 
 In a second terminal, start the frontend:
 ```bash
 npm run client
-# Runs Vite client on http://localhost:3000
 ```
 
-Open your browser at **`http://localhost:3000`** to start crafting and transforming media!
+Open your browser at `http://localhost:3000`.
 
----
+## Transformation Examples
 
-## 🎨 Transformation Examples
-
-| Feature | Cloudinary URL Transformation Parameter | Description |
+| Feature | Cloudinary URL Parameter | Description |
 |---|---|---|
-| **Social Auto-Crop** | `c_fill,w_800,h_800,g_auto` | AI detects faces or primary subjects and crops to 1:1 square |
-| **Color AI Enhancement** | `e_improve` | Automatically optimizes colors, exposure, and contrast |
-| **Edge Sharpening** | `e_sharpen:150` | Clarifies high-frequency details |
-| **Dynamic Watermark** | `l_text:Arial_32_bold:Watermark,g_south_east,o_80` | Overlays stylized text at bottom right |
-| **Video to GIF Preview**| `so_0,du_4,c_scale,w_600/f_gif` | Extracts first 4 seconds of video into an animated GIF |
-| **Performance Delivery**| `f_auto,q_auto` | Delivers optimal modern format (AVIF/WebP) with perceptual compression |
+| Auto-Crop | `c_fill,w_800,h_800,g_auto` | AI detects faces or primary subjects and crops to 1:1 square |
+| Color Enhancement | `e_improve` | Automatically optimizes colors, exposure, and contrast |
+| Edge Sharpening | `e_sharpen:150` | Clarifies high-frequency details |
+| Dynamic Watermark | `l_text:Arial_32_bold:Watermark,g_south_east,o_80` | Overlays stylized text at bottom right |
+| Video to GIF | `so_0,du_4,c_scale,w_600/f_gif` | Extracts first 4 seconds of video into an animated GIF |
+| Codec Optimization | `f_auto,q_auto` | Delivers optimal modern format (AVIF or WebP) with perceptual compression |
 
----
-
-## 📦 Project Structure
+## Project Structure
 
 ```
 cloudinary/
 ├── client/                     # Frontend Application
+│   ├── public/
+│   │   ├── favicon.ico
+│   │   ├── icon.svg
+│   │   ├── apple-touch-icon.png
+│   │   ├── manifest.webmanifest
+│   │   ├── robots.txt
+│   │   └── sitemap.xml
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── BeforeAfterSlider.jsx       # Interactive split comparison viewer
+│   │   │   ├── BeforeAfterSlider.jsx       # Split comparison viewer
 │   │   │   ├── CodeGenerator.jsx           # Node.js, Python, React, cURL snippets
-│   │   │   ├── Header.jsx                  # Top navigation & cloud status badge
-│   │   │   ├── MediaUploader.jsx           # Drag-and-drop signed upload zone
-│   │   │   ├── PerformanceCard.jsx         # Bandwidth savings & speed metrics
+│   │   │   ├── Header.jsx                  # Top navigation and cloud status
+│   │   │   ├── MediaUploader.jsx           # Upload dropzone
+│   │   │   ├── PerformanceCard.jsx         # Bandwidth savings metrics
 │   │   │   ├── RecentAssets.jsx            # Cloud media gallery
 │   │   │   ├── TransformationControls.jsx  # Controls for crop, filters, overlays
-│   │   │   └── UrlInspector.jsx            # Visual breakdown of Cloudinary URLs
+│   │   │   └── UrlInspector.jsx            # Breakdown of Cloudinary URLs
+│   │   ├── pages/
+│   │   │   ├── PrivacyPolicy.jsx           # Privacy policy draft
+│   │   │   └── Terms.jsx                   # Terms and conditions draft
 │   │   ├── utils/
-│   │   │   └── cloudinary.js               # URL builder & SDK snippet generator
-│   │   ├── App.jsx                         # Main application layout
-│   │   ├── index.css                       # Tailwind directives & styles
-│   │   └── main.jsx                        # React entrypoint
+│   │   │   └── cloudinary.js               # URL builder and SDK snippet generator
+│   │   ├── App.jsx                         # Main workbench layout and routes
+│   │   ├── index.css                       # Flat Tailwind styling
+│   │   └── main.jsx                        # React root entry
 │   ├── package.json
 │   ├── tailwind.config.js
 │   └── vite.config.js
@@ -127,13 +122,7 @@ cloudinary/
 │   ├── server.js               # Express API with Cloudinary SDK v2
 │   ├── .env                    # Cloudinary credentials
 │   └── package.json
+├── vercel.json                 # Vercel multi-service configuration
 ├── package.json                # Root orchestrator
-└── README.md                   # Project documentation & Creator Community guide
+└── README.md                   # Documentation
 ```
-
----
-
-## 🤝 Cloudinary Creator Community Submission Details
-- **Project Name**: CloudiCraft Studio
-- **Target Audience**: Developers, content creators, media designers, and community members learning Cloudinary.
-- **Cloudinary Tech Stack**: Cloudinary Node.js SDK v2, Dynamic URL Transformations, AI Subject Gravity (`g_auto`), Dynamic Text Layers (`l_text`), Video Processing (`f_gif`), and CDN Delivery Optimization (`f_auto,q_auto`).

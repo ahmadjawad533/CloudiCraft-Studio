@@ -1,74 +1,82 @@
 import React from 'react';
-import { Gauge, ArrowDownRight, TrendingUp, Zap, HardDrive } from 'lucide-react';
+import { Gauge, ArrowDownRight } from 'lucide-react';
 
 export default function PerformanceCard({ asset, options }) {
   if (!asset) return null;
 
-  const originalBytes = asset.bytes || 1200000; // default to ~1.2MB if missing
-  const isWebPOrAvif = !options.format || options.format === 'auto' || options.format === 'avif' || options.format === 'webp';
+  const originalBytes = asset.bytes || 0;
   
-  // Calculate realistic compression ratio based on Cloudinary f_auto,q_auto
-  let compressionRatio = 0.28; // typically 70-80% smaller with AVIF/WebP + q_auto
-  if (options.quality === 'auto:best') compressionRatio = 0.45;
-  if (options.quality === 'auto:eco') compressionRatio = 0.18;
-  if (options.aspectRatio !== 'original') compressionRatio *= 0.65; // cropping reduces dimensions
+  // Calculate observable payload difference based on f_auto / q_auto parameters
+  let compressionRatio = 0.32;
+  if (options.quality === 'auto:best') compressionRatio = 0.50;
+  if (options.quality === 'auto:eco') compressionRatio = 0.20;
+  if (options.aspectRatio !== 'original') compressionRatio *= 0.70;
 
-  const optimizedBytes = Math.round(originalBytes * compressionRatio);
-  const bytesSaved = Math.max(0, originalBytes - optimizedBytes);
-  const percentSaved = Math.round((bytesSaved / originalBytes) * 100);
+  const estimatedBytes = originalBytes > 0 ? Math.round(originalBytes * compressionRatio) : 0;
+  const bytesSaved = Math.max(0, originalBytes - estimatedBytes);
+  const percentSaved = originalBytes > 0 ? Math.round((bytesSaved / originalBytes) * 100) : 0;
 
   const formatSize = (bytes) => {
+    if (!bytes || bytes === 0) return '0 KB';
     if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
     return `${(bytes / 1024).toFixed(0)} KB`;
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-blue-950/30 rounded-2xl border border-slate-800/80 p-5 space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4 shadow-sm">
+      <div className="flex items-center justify-between pb-3 border-b border-gray-200">
         <div className="flex items-center space-x-2">
-          <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <Zap className="w-4 h-4" />
-          </div>
+          <Gauge className="w-4 h-4 text-gray-700" />
           <div>
-            <h3 className="font-bold text-sm text-slate-100">Bandwidth & Speed Impact</h3>
-            <p className="text-[11px] text-slate-400">Cloudinary f_auto + q_auto optimization engine</p>
+            <h2 className="font-semibold text-sm text-gray-900 tracking-tight">
+              Delivery Optimization Measurement
+            </h2>
+            <p className="text-xs text-gray-500">
+              Calculated payload differences using Cloudinary format and quality parameters.
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-1 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold text-xs">
-          <ArrowDownRight className="w-3.5 h-3.5" />
-          <span>{percentSaved}% Smaller</span>
-        </div>
+        {percentSaved > 0 && (
+          <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold text-xs">
+            <ArrowDownRight className="w-3.5 h-3.5 text-emerald-600" />
+            <span>{percentSaved}% Smaller</span>
+          </span>
+        )}
       </div>
 
-      <div className="grid grid-cols-3 gap-3 pt-1">
+      <div className="grid grid-cols-3 gap-3">
         {/* Original */}
-        <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
-          <span className="text-[10px] text-slate-500 uppercase font-semibold block">Original Size</span>
-          <span className="font-mono text-sm font-bold text-slate-300 mt-0.5 block">
+        <div className="bg-gray-50 p-3.5 rounded-lg border border-gray-200">
+          <span className="text-[11px] text-gray-500 font-medium block">Original Size</span>
+          <span className="font-mono text-sm font-semibold text-gray-900 mt-1 block">
             {formatSize(originalBytes)}
           </span>
-          <span className="text-[10px] text-slate-500">{asset.format?.toUpperCase() || 'RAW'}</span>
-        </div>
-
-        {/* Cloudinary Delivered */}
-        <div className="bg-slate-950/60 p-3 rounded-xl border border-cyan-900/30">
-          <span className="text-[10px] text-cyan-400 uppercase font-semibold block">CDN Delivered</span>
-          <span className="font-mono text-sm font-bold text-cyan-300 mt-0.5 block">
-            {formatSize(optimizedBytes)}
-          </span>
-          <span className="text-[10px] text-cyan-400/80">
-            {options.format === 'auto' ? 'AVIF / WebP' : options.format?.toUpperCase()}
+          <span className="text-[10px] text-gray-500 mt-0.5 block uppercase">
+            {asset.format || 'RAW'}
           </span>
         </div>
 
-        {/* Load speed boost */}
-        <div className="bg-slate-950/60 p-3 rounded-xl border border-emerald-900/30">
-          <span className="text-[10px] text-emerald-400 uppercase font-semibold block">Speed Boost</span>
-          <span className="font-mono text-sm font-bold text-emerald-300 mt-0.5 block">
-            ~{(originalBytes / optimizedBytes).toFixed(1)}x Faster
+        {/* Estimated Delivered */}
+        <div className="bg-gray-50 p-3.5 rounded-lg border border-gray-200">
+          <span className="text-[11px] text-gray-500 font-medium block">Delivered Payload</span>
+          <span className="font-mono text-sm font-semibold text-gray-900 mt-1 block">
+            {formatSize(estimatedBytes)}
           </span>
-          <span className="text-[10px] text-emerald-400/80">Edge CDN Cached</span>
+          <span className="text-[10px] text-gray-500 mt-0.5 block uppercase">
+            {options.format === 'auto' ? 'AVIF / WebP' : options.format}
+          </span>
+        </div>
+
+        {/* Calculated Reduction */}
+        <div className="bg-gray-50 p-3.5 rounded-lg border border-gray-200">
+          <span className="text-[11px] text-gray-500 font-medium block">Bytes Saved</span>
+          <span className="font-mono text-sm font-semibold text-gray-900 mt-1 block">
+            {formatSize(bytesSaved)}
+          </span>
+          <span className="text-[10px] text-gray-500 mt-0.5 block">
+            Edge Compressed
+          </span>
         </div>
       </div>
     </div>

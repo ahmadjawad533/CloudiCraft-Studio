@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { UploadCloud, Image as ImageIcon, Video, Loader2, Sparkles, Check } from 'lucide-react';
+import { Upload, Image as ImageIcon, Video, Loader2 } from 'lucide-react';
 
 export default function MediaUploader({ onAssetUploaded, isUploading, setIsUploading }) {
   const [dragActive, setDragActive] = useState(false);
@@ -62,66 +62,73 @@ export default function MediaUploader({ onAssetUploaded, isUploading, setIsUploa
   return (
     <div className="w-full">
       <div
+        id="uploader-dropzone"
         onDragEnter={handleDrag}
         onDragOver={handleDrag}
         onDragLeave={handleDrag}
         onDrop={handleDrop}
         onClick={() => inputRef.current?.click()}
-        className={`relative border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 ${
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            inputRef.current?.click();
+          }
+        }}
+        aria-label="Upload image or video file"
+        className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 ${
           dragActive
-            ? 'border-cyan-400 bg-cyan-500/10 scale-[1.01]'
-            : 'border-slate-700/80 hover:border-blue-500/80 bg-slate-900/40 hover:bg-slate-900/60'
-        } ${isUploading ? 'pointer-events-none opacity-80' : ''}`}
+            ? 'border-blue-600 bg-blue-50/40'
+            : 'border-gray-300 hover:border-gray-400 bg-white'
+        } ${isUploading ? 'pointer-events-none opacity-60' : ''}`}
       >
         <input
           ref={inputRef}
           type="file"
+          id="file-upload-input"
+          aria-label="Select image or video file"
           className="hidden"
           accept="image/*,video/*"
           onChange={(e) => handleFiles(e.target.files[0])}
         />
 
         <div className="flex flex-col items-center justify-center space-y-3">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600/30 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center text-cyan-300 shadow-inner">
+          <div className="w-12 h-12 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-700">
             {isUploading ? (
-              <Loader2 className="w-7 h-7 animate-spin text-cyan-400" />
+              <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
             ) : (
-              <UploadCloud className="w-7 h-7 text-cyan-400" />
+              <Upload className="w-6 h-6 text-gray-600" />
             )}
           </div>
 
           <div>
-            <p className="font-semibold text-slate-200 text-sm">
+            <p className="font-semibold text-gray-900 text-sm">
               {isUploading ? (
-                'Uploading & Streaming to Cloudinary Cloud...'
+                'Streaming asset to Cloudinary...'
               ) : (
                 <>
-                  <span className="text-cyan-400 hover:underline">Click to upload</span> or drag and drop media
+                  <span className="text-blue-600 hover:underline">Click to upload</span> or drag and drop a file
                 </>
               )}
             </p>
-            <p className="text-xs text-slate-400 mt-1">
-              Supports JPG, PNG, WEBP, MP4, MOV (Up to 25MB)
+            <p className="text-xs text-gray-500 mt-1">
+              Supports JPG, PNG, WEBP, MP4, MOV up to 25MB.
             </p>
           </div>
 
-          <div className="flex items-center space-x-3 text-[11px] text-slate-400">
-            <span className="flex items-center">
-              <ImageIcon className="w-3.5 h-3.5 mr-1 text-blue-400" /> Image Transformations
+          <div className="flex items-center space-x-3 text-xs text-gray-500 pt-1">
+            <span className="inline-flex items-center">
+              <ImageIcon className="w-3.5 h-3.5 mr-1 text-gray-600" /> Image Transformations
             </span>
-            <span className="text-slate-600">•</span>
-            <span className="flex items-center">
-              <Video className="w-3.5 h-3.5 mr-1 text-cyan-400" /> Video & GIF Conversion
-            </span>
-            <span className="text-slate-600">•</span>
-            <span className="flex items-center">
-              <Sparkles className="w-3.5 h-3.5 mr-1 text-indigo-400" /> AI Auto-Crop & Effects
+            <span className="text-gray-300">•</span>
+            <span className="inline-flex items-center">
+              <Video className="w-3.5 h-3.5 mr-1 text-gray-600" /> Video and GIF Processing
             </span>
           </div>
         </div>
 
         {error && (
-          <div className="mt-4 p-2.5 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-400">
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 text-left">
             {error}
           </div>
         )}

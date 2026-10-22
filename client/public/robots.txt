@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cloudicraft-studio.vercel.app/sitemap.xml

@@ -15,32 +15,32 @@ export default function CodeGenerator({ publicId, options, asset }) {
   };
 
   const tabs = [
-    { id: 'node', label: 'Node.js SDK' },
-    { id: 'python', label: 'Python SDK' },
-    { id: 'react', label: 'React / Next.js' },
-    { id: 'curl', label: 'cURL / Shell' },
+    { id: 'node', label: 'Node.js' },
+    { id: 'python', label: 'Python' },
+    { id: 'react', label: 'React' },
+    { id: 'curl', label: 'cURL' },
   ];
 
   return (
-    <div className="bg-slate-900/60 rounded-2xl border border-slate-800 p-5 space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4 shadow-sm">
+      <div className="flex items-center justify-between pb-3 border-b border-gray-200">
         <div className="flex items-center space-x-2">
-          <Code2 className="w-4 h-4 text-indigo-400" />
-          <h3 className="font-bold text-sm text-slate-100 uppercase tracking-wide">
-            Developer SDK Generator
-          </h3>
+          <Code2 className="w-4 h-4 text-gray-700" />
+          <h2 className="font-semibold text-sm text-gray-900 tracking-tight">
+            Code Integration Snippet
+          </h2>
         </div>
 
-        {/* Tab selection */}
-        <div className="flex items-center space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+        <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg border border-gray-200">
           {tabs.map((tab) => (
             <button
               key={tab.id}
+              type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`px-2.5 py-1 text-xs rounded-lg font-medium transition cursor-pointer ${
+              className={`px-2.5 py-1 text-xs rounded-md font-medium transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
                 activeTab === tab.id
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white text-blue-700 shadow-sm font-semibold'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               {tab.label}
@@ -49,17 +49,18 @@ export default function CodeGenerator({ publicId, options, asset }) {
         </div>
       </div>
 
-      {/* Code Display */}
-      <div className="relative rounded-xl bg-slate-950 p-4 border border-slate-800 font-mono text-xs overflow-x-auto text-slate-300">
+      <div className="relative rounded-lg bg-gray-900 p-4 border border-gray-800 font-mono text-xs overflow-x-auto text-gray-100">
         <button
+          type="button"
           onClick={handleCopy}
-          className="absolute top-3 right-3 flex items-center space-x-1 px-2.5 py-1 text-[11px] rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition cursor-pointer"
+          className="absolute top-3 right-3 inline-flex items-center space-x-1 px-2.5 py-1 text-[11px] rounded-md bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+          aria-label="Copy code snippet"
         >
           {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-          <span>{copied ? 'Copied' : 'Copy Snippet'}</span>
+          <span>{copied ? 'Copied' : 'Copy'}</span>
         </button>
 
-        <pre className="text-slate-300 pr-24 leading-relaxed">
+        <pre className="text-gray-200 pr-20 leading-relaxed">
           <code>{snippets[activeTab]}</code>
         </pre>
       </div>

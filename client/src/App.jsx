@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Header from './components/Header';
 import MediaUploader from './components/MediaUploader';
 import TransformationControls from './components/TransformationControls';
@@ -7,8 +8,10 @@ import UrlInspector from './components/UrlInspector';
 import CodeGenerator from './components/CodeGenerator';
 import PerformanceCard from './components/PerformanceCard';
 import RecentAssets from './components/RecentAssets';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Terms from './pages/Terms';
 import { buildTransformedUrl } from './utils/cloudinary';
-import { Sparkles, Layers, Sliders, PlayCircle } from 'lucide-react';
+import { Upload } from 'lucide-react';
 
 const DEFAULT_OPTIONS = {
   aspectRatio: 'original',
@@ -24,7 +27,7 @@ const DEFAULT_OPTIONS = {
   videoMode: 'video',
 };
 
-export default function App() {
+function Workbench() {
   const [status, setStatus] = useState(null);
   const [assets, setAssets] = useState([]);
   const [selectedAsset, setSelectedAsset] = useState(null);
@@ -33,7 +36,6 @@ export default function App() {
   const [isSeeding, setIsSeeding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch initial account info and assets
   const fetchData = async () => {
     setIsLoading(true);
     try {
@@ -63,7 +65,6 @@ export default function App() {
     fetchData();
   }, []);
 
-  // Handle seeding sample assets
   const handleSeedSamples = async () => {
     setIsSeeding(true);
     try {
@@ -80,14 +81,12 @@ export default function App() {
     }
   };
 
-  // Handle asset upload completion
   const handleAssetUploaded = (newAsset) => {
     setAssets((prev) => [newAsset, ...prev]);
     setSelectedAsset(newAsset);
     setOptions(DEFAULT_OPTIONS);
   };
 
-  // Handle asset delete
   const handleDeleteAsset = async (publicId, type) => {
     try {
       const res = await fetch(`/api/resource?publicId=${encodeURIComponent(publicId)}&type=${type}`, {
@@ -115,32 +114,44 @@ export default function App() {
     : '';
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] flex flex-col text-slate-100 selection:bg-cyan-500 selection:text-black">
-      {/* Top Navbar */}
+    <div className="min-h-screen bg-gray-50 flex flex-col text-gray-900">
       <Header
         status={status}
         onSeedSamples={handleSeedSamples}
         isSeeding={isSeeding}
       />
 
-      {/* Main Content Layout */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {/* Hero Banner for Cloudinary Creator Community */}
-        <div className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-blue-900/30 via-indigo-950/20 to-cyan-950/20 border border-blue-500/20 overflow-hidden shadow-2xl">
-          <div className="absolute -right-10 -bottom-10 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-3xl">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-xs font-semibold mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Project for Cloudinary Creator Community</span>
-            </div>
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
-              CloudiCraft AI Media Studio & URL Inspector
+        {/* Calm, professional hero with plain headline and one clear button */}
+        <section className="bg-white border border-gray-200 rounded-lg p-6 sm:p-8 shadow-sm">
+          <div className="max-w-3xl space-y-3">
+            <span className="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-md inline-block">
+              Cloudinary Media Workbench
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+              Inspect, test, and benchmark media transformations in real time.
             </h1>
-            <p className="text-slate-300 text-sm sm:text-base mt-2 leading-relaxed">
-              Explore dynamic URL transformations, AI gravity smart-cropping (<code className="text-cyan-300 bg-cyan-950/60 px-1 py-0.5 rounded text-xs">g_auto</code>), dynamic watermarks, format auto-optimization (<code className="text-cyan-300 bg-cyan-950/60 px-1 py-0.5 rounded text-xs">f_auto,q_auto</code>), and instant multi-language SDK code generation.
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Upload an image or video to configure aspect ratios, AI gravity cropping, dynamic watermarks, and format optimization.
             </p>
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  const dropzone = document.getElementById('uploader-dropzone');
+                  if (dropzone) {
+                    dropzone.scrollIntoView({ behavior: 'smooth' });
+                    dropzone.click();
+                  }
+                }}
+                className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+              >
+                <Upload className="w-4 h-4" />
+                <span>Upload Media</span>
+              </button>
+            </div>
           </div>
-        </div>
+        </section>
 
         {/* Upload Zone */}
         <MediaUploader
@@ -151,10 +162,9 @@ export default function App() {
 
         {selectedAsset ? (
           <div className="space-y-8">
-            {/* Interactive Workspace Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              {/* Left Column: Transformation Controls (5 cols) */}
-              <div className="lg:col-span-5 bg-slate-900/60 rounded-3xl border border-slate-800 p-6 shadow-xl backdrop-blur-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              {/* Controls Column (5 cols) */}
+              <div className="lg:col-span-5 bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                 <TransformationControls
                   options={options}
                   setOptions={setOptions}
@@ -163,9 +173,9 @@ export default function App() {
                 />
               </div>
 
-              {/* Right Column: Visual Viewer & Comparison (7 cols) */}
+              {/* Viewer Column (7 cols) */}
               <div className="lg:col-span-7 space-y-6">
-                <div className="bg-slate-900/60 rounded-3xl border border-slate-800 p-6 shadow-xl backdrop-blur-sm">
+                <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                   <BeforeAfterSlider
                     originalUrl={selectedAsset.url}
                     transformedUrl={transformedUrl}
@@ -174,21 +184,18 @@ export default function App() {
                   />
                 </div>
 
-                {/* Bandwidth Savings Card */}
                 <PerformanceCard asset={selectedAsset} options={options} />
               </div>
             </div>
 
-            {/* Bottom Section: Educational Developer Playground */}
+            {/* URL Inspector & Code Generator */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Cloudinary URL Inspector */}
               <UrlInspector
                 transformedUrl={transformedUrl}
                 options={options}
                 asset={selectedAsset}
               />
 
-              {/* Developer Code Generator */}
               <CodeGenerator
                 publicId={selectedAsset.publicId}
                 options={options}
@@ -197,24 +204,22 @@ export default function App() {
             </div>
           </div>
         ) : (
-          /* Empty State when no asset selected */
-          <div className="p-12 text-center rounded-3xl border border-slate-800 bg-slate-900/40 space-y-4">
-            <h3 className="text-lg font-bold text-slate-300">No Asset Currently Selected</h3>
-            <p className="text-sm text-slate-500 max-w-md mx-auto">
-              Upload an image or video above, or click below to load high-resolution demo samples into your Cloudinary cloud.
+          <div className="p-12 text-center rounded-lg border border-gray-200 bg-white space-y-3 shadow-sm">
+            <h2 className="text-base font-semibold text-gray-800">No asset currently selected</h2>
+            <p className="text-xs text-gray-500 max-w-md mx-auto">
+              Upload a media file above or click below to load sample media into your Cloudinary cloud.
             </p>
             <button
+              type="button"
               onClick={handleSeedSamples}
               disabled={isSeeding}
-              className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-lg shadow-blue-600/30 transition cursor-pointer"
+              className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-gray-900 hover:bg-gray-800 text-white text-xs font-medium transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
             >
-              <Sparkles className="w-4 h-4" />
-              <span>{isSeeding ? 'Seeding Demo Assets...' : 'Load Curated Sample Assets'}</span>
+              <span>{isSeeding ? 'Loading sample media...' : 'Load Sample Media'}</span>
             </button>
           </div>
         )}
 
-        {/* Media Library / Recent Uploads */}
         <RecentAssets
           assets={assets}
           selectedAsset={selectedAsset}
@@ -228,17 +233,43 @@ export default function App() {
         />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950/80 py-6 mt-12 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>
-            Built for the <strong className="text-slate-300 font-semibold">Cloudinary Creator Community</strong> • Cloud: <code className="text-cyan-400">yq115gst</code>
-          </p>
-          <p className="text-slate-400">
-            Powered by Cloudinary Node.js SDK v2 & Real-time Dynamic Transformations
-          </p>
+      {/* Footer linking /privacy and /terms */}
+      <footer className="border-t border-gray-200 bg-white py-6 mt-12 text-xs text-gray-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-center sm:text-left">
+            <span className="font-semibold text-gray-800">CloudiCraft Studio</span>
+            <span className="text-gray-400 mx-2">|</span>
+            <span>Cloudinary media transformation workbench.</span>
+          </div>
+
+          <div className="flex items-center space-x-6 text-xs text-gray-600">
+            <Link
+              to="/privacy"
+              className="hover:text-gray-900 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded px-1"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              to="/terms"
+              className="hover:text-gray-900 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded px-1"
+            >
+              Terms and Conditions
+            </Link>
+          </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Workbench />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<Terms />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

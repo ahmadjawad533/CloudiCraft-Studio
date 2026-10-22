@@ -17,13 +17,13 @@ export const ASPECT_RATIOS = [
 
 export const FILTERS = [
   { id: 'none', label: 'None', transform: '' },
-  { id: 'improve', label: 'AI Auto-Improve', transform: 'e_improve', desc: 'Auto color & contrast balancing' },
-  { id: 'sharpen', label: 'Ultra Sharpen', transform: 'e_sharpen:150', desc: 'Enhances fine edges' },
-  { id: 'grayscale', label: 'B & W Cinema', transform: 'e_grayscale', desc: 'Crisp black & white' },
-  { id: 'sepia', label: 'Vintage Sepia', transform: 'e_sepia', desc: 'Warm nostalgic retro tone' },
-  { id: 'vignette', label: 'Dramatic Vignette', transform: 'e_vignette:60', desc: 'Darkened borders focus subject' },
-  { id: 'cyberpunk', label: 'Cyberpunk Neon', transform: 'e_tint:100:magenta:00f0ff', desc: 'Futuristic vibrant dual tint' },
-  { id: 'warm', label: 'Golden Hour', transform: 'e_tint:40:orange:yellow', desc: 'Warm ambient glow' },
+  { id: 'improve', label: 'Auto-Improve', transform: 'e_improve', desc: 'Auto color and contrast balancing' },
+  { id: 'sharpen', label: 'Sharpen', transform: 'e_sharpen:150', desc: 'Enhances fine edge details' },
+  { id: 'grayscale', label: 'Grayscale', transform: 'e_grayscale', desc: 'Clean monochrome conversion' },
+  { id: 'sepia', label: 'Sepia', transform: 'e_sepia', desc: 'Warm vintage tone' },
+  { id: 'vignette', label: 'Vignette', transform: 'e_vignette:60', desc: 'Subtle corner darkening' },
+  { id: 'contrast', label: 'High Contrast', transform: 'e_contrast:40', desc: 'Increases dynamic range' },
+  { id: 'warm', label: 'Warm Tint', transform: 'e_tint:25:orange:yellow', desc: 'Subtle warm color balance' },
 ];
 
 /**
