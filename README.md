@@ -64,9 +64,9 @@ npm run install:all
 Verify your `server/.env` contains your Cloudinary credentials:
 ```env
 PORT=5001
-CLOUDINARY_CLOUD_NAME=yq115gst
-CLOUDINARY_API_KEY=832898144962491
-CLOUDINARY_API_SECRET=Qf9L7FcrlpnaVDqk_gsnVqr0PdE
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ```
 
 ### 4. Running the Project
