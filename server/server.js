@@ -210,7 +210,10 @@ app.delete('/api/resource', async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+if (process.env.VERCEL !== '1' && require.main === module) {
+  app.listen(port, () => {
+    console.log(`CloudiCraft Studio API server running on http://localhost:${port}`);
+  });
+}
 
-app.listen(port, () => {
-  console.log(`CloudiCraft Studio API server running on http://localhost:${port}`);
-});
+module.exports = app;
