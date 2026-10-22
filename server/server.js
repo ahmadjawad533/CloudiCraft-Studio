@@ -9,16 +9,33 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5001;
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true,
-});
+// Helper to sanitize environment variables and trim whitespace/newlines/quotes
+function getCloudinaryConfig() {
+  const clean = (val) => (val || '').toString().trim().replace(/^["']|["']$/g, '');
+
+  const cloudName = clean(process.env.CLOUDINARY_CLOUD_NAME) || 'yq115gst';
+  const apiKey = clean(process.env.CLOUDINARY_API_KEY) || '832898144962491';
+  const apiSecret = clean(process.env.CLOUDINARY_API_SECRET) || 'Qf9L7FcrlpnaVDqk_gsnVqr0PdE';
+
+  return {
+    cloud_name: cloudName,
+    api_key: apiKey,
+    api_secret: apiSecret,
+    secure: true,
+  };
+}
+
+// Initial configuration
+cloudinary.config(getCloudinaryConfig());
 
 app.use(cors());
 app.use(express.json());
+
+// Ensure Cloudinary is always configured with sanitized credentials on each serverless invocation
+app.use((req, res, next) => {
+  cloudinary.config(getCloudinaryConfig());
+  next();
+});
 
 // In-memory upload handling via multer
 const storage = multer.memoryStorage();
@@ -31,11 +48,12 @@ const upload = multer({
  * Health & Usage status
  */
 app.get('/api/status', async (req, res) => {
+  const config = getCloudinaryConfig();
   try {
     const usage = await cloudinary.api.usage();
     res.json({
       success: true,
-      cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+      cloudName: config.cloud_name,
       plan: usage.plan,
       credits: usage.credits,
       resources: usage.resources,
@@ -47,7 +65,7 @@ app.get('/api/status', async (req, res) => {
     console.error('Error fetching Cloudinary usage:', error);
     res.status(500).json({
       success: false,
-      cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+      cloudName: config.cloud_name,
       error: error.message,
     });
   }
