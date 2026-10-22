@@ -1,0 +1,20 @@
+{
+  "name": "cloudicraft-studio",
+  "version": "1.0.0",
+  "description": "Cloudinary AI Media Transformer & Developer Suite for Cloudinary Creator Community",
+  "scripts": {
+    "server": "cd server && node server.js",
+    "client": "cd client && npm run dev",
+    "install:all": "cd server && npm install && cd ../client && npm install"
+  },
+  "keywords": [
+    "cloudinary",
+    "media-transformations",
+    "creator-community",
+    "react",
+    "vite",
+    "node"
+  ],
+  "author": "Cloudinary Creator",
+  "license": "MIT"
+}
